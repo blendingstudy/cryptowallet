@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='cryptowallet.css') }}">
+  <title>코인 지갑 - 로그인</title>
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home') }}">홈</a></li>
+        <li><a href="{{ url_for('login_page', redirect='wallet') }}">지갑</a></li>
+        <li><a href="{{ url_for('login_page', redirect='transactions_page') }}">거래내역</a></li>
+        <li><a href="{{ url_for('login_page', redirect='settings_page') }}">설정</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h1>로그인</h1>
+      <form id="login-form">
+        <label for="username">사용자 이름:</label>
+        <input 
+          type="text" 
+          id="username" 
+          name="username" 
+          placeholder="ID"
+          autocomplete = "off" 
+          required>
+        <label for="password">비밀번호:</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="password"
+          autocomplete="off"
+          required>
+
+        <button type="submit">로그인</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirect') || "{{ url_for('wallet') }}";
+
+
+  const loginForm = document.querySelector('#login-form');
+
+  // 로그인 폼 제출 이벤트 핸들러
+  loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const username = document.querySelector('#username').value;
+  const password = document.querySelector('#password').value;
+
+  try {
+        const response = await fetch('{{ url_for("login_page") }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+        const result = await response.json();
+        if (response.status === 200) {
+          alert('로그인 성공!');
+          sessionStorage.setItem('isLoggedIn', 'true');
+          sessionStorage.setItem('userId', result.userId);
+          window.location.href = redirectUrl;
+        } else {
+          alert(result.message || '잘못된 사용자 이름 또는 비밀번호입니다.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('로그인 중 오류가 발생했습니다.');
+      }
+    });
+  </script>
+
+</body>
+</html>

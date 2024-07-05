@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='cryptowallet.css') }}">
+  <title>코인 지갑 - 지갑</title>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home') }}">홈</a></li>
+        <li><a href="{{ url_for('wallet') }}">지갑</a></li>
+        <li><a href="{{ url_for('transactions_page') }}">거래내역</a></li>
+        <li><a href="{{ url_for('settings_page') }}">설정</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h1>내 지갑</h1>
+      <div id="wallet-balance"></div>
+      <!-- 잔액표시됨 여기에 -->
+      <button id="add-funds">자금 추가</button>
+    </section>
+
+    <section>
+      <h2>보유 코인</h2>
+      <ul id="coin-list"></ul>
+    </section>
+  </main>
+
+  <script>
+
+  const loginPageUrl = "{{ url_for('login_page', redirect='wallet') }}";
+  // 로그인 여부 확인
+  if (!sessionStorage.getItem('isLoggedIn')) {
+      window.location.href = loginPageUrl;
+    }
+
+    const addFundsBtn = document.getElementById('add-funds');
+  
+    addFundsBtn.addEventListener('click', () => {
+      window.location.href = 'addfunds.html';
+    });
+  </script>
+
+  <script>
+    // 네비게이션 링크 클릭 이벤트 핸들러
+  const navLinks = document.querySelectorAll('nav ul li a');
+  
+  navLinks.forEach(link => {
+    link.addEventListener('click', handleNavigation);
+  });
+  
+  function handleNavigation(e) {
+  e.preventDefault();
+  const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+  const targetUrl = e.target.href.replace(window.location.origin, '');
+
+  if (isLoggedIn) {
+    if (targetUrl.includes('login.html?redirect=')) {
+      const redirectUrl = targetUrl.split('login.html?redirect=')[1];
+      window.location.href = redirectUrl;
+    } else {
+      window.location.href = targetUrl;
+    }
+  } else {
+    const redirectUrl = targetUrl.split('?')[1]; // redirect 파라미터 추출
+    window.location.href = `login.html?${redirectUrl || ''}`;
+  }
+}
+  </script>
+
+  <script>
+    // 로그인 상태 확인
+    function checkLoginStatus() {
+      const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+      return isLoggedIn;
+    }
+  
+    // 로그아웃 버튼 클릭 이벤트 핸들러
+    const logoutBtn = document.querySelector('#logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', logout);
+    }
+  
+    // 로그아웃 함수
+    function logout() {
+      sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('userId'); // 사용자 ID 제거
+      window.location.href = 'cryptowallet.html';
+    }
+  
+    // 페이지 로드 시 로그인 상태 확인
+    window.onload = function() {
+      const isLoggedIn = checkLoginStatus();
+      const loginSection = document.querySelector('#login');
+      if (loginSection) {
+        loginSection.style.display = isLoggedIn ? 'none' : 'block';
+      }
+      const logoutBtn = document.querySelector('#logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.style.display = isLoggedIn ? 'inline-block' : 'none';
+      }
+      if (isLoggedIn) {
+        fetchWalletData();
+      }
+    }
+  </script>
+
+  <script>
+    async function fetchWalletData() {
+      const userId = sessionStorage.getItem('userId');
+
+      if (!userId) {
+        alert('사용자 정보가 없습니다. 다시 로그인해주세요.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:5000/wallet?user_id=${userId}`);
+        const result = await response.json();
+
+        if (response.status === 200) {
+          displayWalletBalance(result.balance);
+          displayCoinList(result.coins);
+        } else {
+          alert(result.error || '지갑 정보를 가져오는 중 오류가 발생했습니다.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('지갑 정보를 가져오는 중 오류가 발생했습니다.');
+      }
+    }
+
+    // 지갑 잔고 표시 함수
+    function displayWalletBalance(balance) {
+      const walletBalanceElement = document.querySelector('#wallet-balance');
+      walletBalanceElement.textContent = `지갑 잔고: $${balance.toFixed(2)}`;
+    }
+
+    // 보유 코인 목록 표시 함수
+    function displayCoinList(coins) {
+      const coinListElement = document.querySelector('#coin-list');
+      coinListElement.innerHTML = '';
+
+      coins.forEach(coin => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${coin.name} (${coin.symbol}) - ${coin.amount}`;
+        coinListElement.appendChild(listItem);
+      });
+    }
+
+    /*// 사용자 정보를 세션에 저장하는 함수
+    function saveUserData(balance, coins) {
+      sessionStorage.setItem('userBalance', balance);
+      sessionStorage.setItem('userCoins', JSON.stringify(coins));
+    }
+
+    // 페이지 로드 시 지갑 정보 표시
+    const userBalance = 1000; // 예시 데이터
+    const userCoins = [
+      { name: '비트코인', symbol: 'BTC', amount: 0.5 },
+      { name: '이더리움', symbol: 'ETH', amount: 2.0 },
+      { name: '리플', symbol: 'XRP', amount: 500 },
+    ];*/
+
+    displayWalletBalance(userBalance);
+    displayCoinList(userCoins);
+    //saveUserData(userBalance, userCoins);
+  </script>
+</body>
+</html>

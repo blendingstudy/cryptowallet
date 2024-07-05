@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='cryptowallet.css') }}">
+  <title>코인 지갑 - 거래내역</title>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+          <li><a href="cryptowallet.html">홈</a></li>
+          <li><a href="login.html?redirect=wallet.html">지갑</a></li>
+          <li><a href="login.html?redirect=transactions.html">거래내역</a></li>
+          <li><a href="login.html?redirect=settings.html">설정</a></li>
+          <button id="logoutBtn" style="display: none;">로그아웃</button>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h1>거래내역</h1>
+      <ul id="transaction-list"></ul>
+    </section>
+  </main>
+
+<script>
+  // 네비게이션 링크 클릭 이벤트 핸들러
+const navLinks = document.querySelectorAll('nav ul li a');
+
+navLinks.forEach(link => {
+  link.addEventListener('click', handleNavigation);
+});
+
+function handleNavigation(e) {
+  e.preventDefault();
+  const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+  const targetUrl = e.target.href.replace(window.location.origin, '');
+
+  if (isLoggedIn) {
+    if (targetUrl.includes('login.html?redirect=')) {
+      const redirectUrl = targetUrl.split('login.html?redirect=')[1];
+      window.location.href = redirectUrl;
+    } else {
+      window.location.href = targetUrl;
+    }
+  } else {
+    const redirectUrl = targetUrl.split('?')[1]; // redirect 파라미터 추출
+    window.location.href = `login.html?${redirectUrl || ''}`;
+  }
+}
+</script>
+
+  <script>
+    // 로그인 상태 확인
+    function checkLoginStatus() {
+      const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+      return isLoggedIn;
+    }
+  
+    // 로그아웃 버튼 클릭 이벤트 핸들러
+    const logoutBtn = document.querySelector('#logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', logout);
+    }
+  
+    // 로그아웃 함수
+    function logout() {
+      sessionStorage.removeItem('isLoggedIn');
+      window.location.href = 'cryptowallet.html';
+    }
+  
+    // 페이지 로드 시 로그인 상태 확인
+    window.onload = function() {
+      const isLoggedIn = checkLoginStatus();
+      const loginSection = document.querySelector('#login');
+      if (loginSection) {
+        loginSection.style.display = isLoggedIn ? 'none' : 'block';
+      }
+      const logoutBtn = document.querySelector('#logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.style.display = isLoggedIn ? 'inline-block' : 'none';
+      }
+    }
+
+    // 사용자 거래내역을 세션에 저장하는 함수
+  function saveUserTransactions(transactions) {
+    sessionStorage.setItem('userTransactions', JSON.stringify(transactions));
+    sessionStorage.setItem('userTransactions', transactionsJSON);
+}
+
+    // 거래내역 표시 함수
+    function displayTransactions(transactions) {
+      console.log('displayTransactions 함수 실행');
+      const transactionListElement = document.querySelector('#transaction-list');
+      transactionListElement.innerHTML = '';
+
+      transactions.forEach(transaction => {
+        const listItem = document.createElement('li');
+        const transactionText = `${transaction.type} - ${transaction.coin} (${transaction.amount}) - ${transaction.date}`;
+        console.log(transactionText);
+        listItem.textContent = transactionText;
+        transactionListElement.appendChild(listItem);
+      });
+    }
+
+    const isLoggedIn = checkLoginStatus();
+    if (isLoggedIn) {
+    const userTransactions = [
+      { type: '입금', coin: 'BTC', amount: 0.5, date: '2023-04-25' },
+      { type: '출금', coin: 'ETH', amount: 1.0, date: '2023-04-24' },
+      { type: '입금', coin: 'XRP', amount: 200, date: '2023-04-23' },
+      ];
+      displayTransactions(userTransactions);
+      saveUserTransactions(userTransactions);
+      
+
+      // wallet.html에서 저장된 사용자 정보 가져오기
+      const userBalance = parseFloat(sessionStorage.getItem('userBalance'));
+      const userCoins = JSON.parse(sessionStorage.getItem('userCoins'));
+
+      // 사용자 정보 표시 함수 호출
+      displayWalletBalance(userBalance);
+      displayCoinList(userCoins);
+    }
+  </script>
+</body>
+</html>

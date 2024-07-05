@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='cryptowallet.css') }}">
+  <title>코인 지갑 - 설정</title>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="cryptowallet.html">홈</a></li>
+        <li><a href="login.html?redirect=wallet.html">지갑</a></li>
+        <li><a href="login.html?redirect=transactions.html">거래내역</a></li>
+        <li><a href="login.html?redirect=settings.html">설정</a></li>
+        <button id="logoutBtn" style="display: none;">로그아웃</button>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h1>설정</h1>
+      <form id="settings-form">
+        <label for="current-password">현재 비밀번호:</label>
+        <input 
+          type="password" 
+          id="current-password" 
+          name="current-password" 
+          placeholder="현재 비밀번호"
+          required>
+        <label for="new-password">새 비밀번호:</label>
+        <input 
+          type="password" 
+          id="new-password" 
+          name="new-password" 
+          placeholder="새 비밀번호"
+          required>
+        <input 
+          type="password" 
+          id="confirm-password" 
+          name="confirm-password" 
+          placeholder="새 비밀번호 확인"
+          required>
+
+        <button type="submit">비밀번호 변경</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    // 네비게이션 링크 클릭 이벤트 핸들러
+  const navLinks = document.querySelectorAll('nav ul li a');
+  
+  navLinks.forEach(link => {
+    link.addEventListener('click', handleNavigation);
+  });
+  
+  function handleNavigation(e) {
+  e.preventDefault();
+  const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+  const targetUrl = e.target.href.replace(window.location.origin, '');
+
+  if (isLoggedIn) {
+    if (targetUrl.includes('login.html?redirect=')) {
+      const redirectUrl = targetUrl.split('login.html?redirect=')[1];
+      window.location.href = redirectUrl;
+    } else {
+      window.location.href = targetUrl;
+    }
+  } else {
+    const redirectUrl = targetUrl.split('?')[1]; // redirect 파라미터 추출
+    window.location.href = `login.html?${redirectUrl || ''}`;
+  }
+}
+  </script>
+
+  <script>
+    // 로그인 상태 확인
+    function checkLoginStatus() {
+      const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+      return isLoggedIn;
+    }
+  
+    // 로그아웃 버튼 클릭 이벤트 핸들러
+    const logoutBtn = document.querySelector('#logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', logout);
+    }
+  
+    // 로그아웃 함수
+    function logout() {
+      sessionStorage.removeItem('isLoggedIn');
+      window.location.href = 'cryptowallet.html';
+    }
+  
+    // 페이지 로드 시 로그인 상태 확인
+    window.onload = function() {
+      const isLoggedIn = checkLoginStatus();
+      const loginSection = document.querySelector('#login');
+      if (loginSection) {
+        loginSection.style.display = isLoggedIn ? 'none' : 'block';
+      }
+      const logoutBtn = document.querySelector('#logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.style.display = isLoggedIn ? 'inline-block' : 'none';
+      }
+    }
+  </script>
+
+  <script>
+    // 설정 폼 제출 이벤트 핸들러
+const settingsForm = document.querySelector('#settings-form');
+settingsForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const currentPassword = document.querySelector('#current-password').value;
+  const newPassword = document.querySelector('#new-password').value;
+  const confirmPassword = document.querySelector('#confirm-password').value;
+
+  // 로그인 시 저장된 비밀번호 (예시로 'password'를 사용)
+  const loggedInPassword = 'password';
+
+  // 현재 비밀번호와 로그인 비밀번호 일치 여부 확인
+  if (currentPassword === loggedInPassword) {
+    // 새 비밀번호와 확인 비밀번호 일치 여부 확인
+    if (newPassword === confirmPassword) {
+      // 새 비밀번호와 현재 비밀번호가 동일한지 확인
+      if (newPassword === currentPassword) {
+        alert('새 비밀번호가 현재 비밀번호와 동일합니다.');
+      } else {
+        // 비밀번호 변경 처리
+        alert('비밀번호가 성공적으로 변경되었습니다.');
+        // 새로운 비밀번호로 업데이트
+        loggedInPassword = newPassword;
+      }
+    } else {
+      alert('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+    }
+  } else {
+    alert('현재 비밀번호가 일치하지 않습니다.');
+  }
+});
+  </script>
+</body>
+</html>

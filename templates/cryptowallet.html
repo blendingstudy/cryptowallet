@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='cryptowallet.css') }}">
+  <title>코인 지갑</title>
+</head>
+<body>
+
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/"">홈</a></li>
+        <li><a href="/wallet">지갑</a></li>
+        <li><a href="/transactions_page">거래내역</a></li>
+        <li><a href="/settings_page">설정</a></li>
+      </ul>
+    </nav>
+    <button onclick="logout()" id="logoutBtn" style="display: none;">로그아웃</button>
+  </header>
+
+  <main>
+    <section>
+      <h1>코인 지갑에 오신 것을 환영합니다</h1>
+      <p>암호화폐 자산을 안전하고 효율적으로 관리하세요.</p>
+    </section>
+
+
+    <section id="login">
+      <h2>로그인</h2>
+      <form
+        autocomplete="off">
+        <label for="username">사용자 이름:</label>
+        <input 
+          type="text" 
+          id="username" 
+          name="username" 
+          placeholder="ID"
+          autocomplete="off"
+          required>
+        <label for="password">비밀번호:</label>
+        <input 
+          type="password" 
+          id="password" 
+          name = "password" 
+          placeholder="password"
+          autocomplete="off"
+          required>
+        <button type="submit">로그인</button>
+      </form>
+      <p>아직 계정이 없으신가요? <a href="{{ url_for('signup') }}">회원가입</a></p>
+    </section>
+
+
+    <section id="coin-prices">
+      <h2>코인 시세</h2>
+      <ul>
+
+        <li>
+          <span class="coin-name">비트코인 (BTC)</span>
+          <span class="coin-price" id="btc-price"></span>
+        </li>
+        <li>
+          <span class="coin-name">이더리움 (ETH)</span>
+          <span class="coin-price" id="eth-price"></span>
+        </li>
+        <li>
+          <span class="coin-name">리플 (XRP)</span>
+          <span class="coin-price" id="xrp-price"></span>
+        </li>
+
+      </ul>
+
+    </section>
+
+    <section id="wallet-section" style="display: none;">
+      <h2>내 지갑</h2>
+      <p id="wallet-balance">잔액: </p>
+      <ul id="coin-list"></ul>
+    </section>
+
+    <section id="transaction-section" style="display: none;">
+      <h2>거래 내역</h2>
+      <ul id="transaction-list"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 코인 지갑 by Hyunseok Cho</p>
+  </footer>
+
+  <script src="cryptowallet.js"></script>
+  <script>
+    toggleLoginSection();
+  </script>
+</body>
+</html>

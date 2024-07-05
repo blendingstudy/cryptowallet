@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='cryptowallet.css') }}">
+  <title>코인 지갑 - 자금 추가</title>
+
+  <style>
+    /* 자금 추가 섹션 스타일 */
+    #add-funds-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    #add-funds-form label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    #add-funds-form input,
+    #add-funds-form select {
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 300px;
+    }
+
+    #add-funds-form button {
+      padding: 0.8rem 1.5rem;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #add-funds-form button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="cryptowallet.html">홈</a></li>
+        <li><a href="wallet.html">지갑</a></li>
+        <li><a href="transactions.html">거래내역</a></li>
+        <li><a href="settings.html">설정</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h1>자금 추가</h1>
+      <form id="add-funds-form">
+        <label for="amount">추가 금액:</label>
+        <input type="number" id="amount" name="amount" min="0" step="0.01" required>
+
+        <label for="payment-method">입금 방식:</label>
+        <select id="payment-method" name="payment-method" required>
+          <option value="">선택하세요</option>
+          <option value="credit-card">신용카드</option>
+          <option value="bank-account">은행 계좌</option>
+          <!-- 추가 옵션 -->
+        </select>
+
+        <div id="payment-info">
+          <!-- 선택한 입금 방식에 따라 입력란이 동적으로 추가됨 -->
+        </div>
+
+        <button type="submit">자금 추가</button>
+      </form>
+    </section>
+  </main>
+
+  <<script>
+    const paymentMethodSelect = document.getElementById('payment-method');
+    const paymentInfoDiv = document.getElementById('payment-info');
+  
+    // 입금 방식 선택에 따른 동적 입력란 생성 함수
+    function generatePaymentInputs(paymentMethod) {
+      paymentInfoDiv.innerHTML = ''; // 이전 입력란 제거
+  
+      if (paymentMethod === 'credit-card') {
+        const cardNumberInput = document.createElement('input');
+        cardNumberInput.type = 'text';
+        cardNumberInput.placeholder = '카드 번호';
+        cardNumberInput.required = true;
+        paymentInfoDiv.appendChild(cardNumberInput);
+  
+        const expiryInput = document.createElement('input');
+        expiryInput.type = 'text';
+        expiryInput.placeholder = '유효기간 (MM/YY)';
+        expiryInput.required = true;
+        paymentInfoDiv.appendChild(expiryInput);
+  
+        const cvcInput = document.createElement('input');
+        cvcInput.type = 'text';
+        cvcInput.placeholder = 'CVC 코드';
+        cvcInput.required = true;
+        paymentInfoDiv.appendChild(cvcInput);
+      } else if (paymentMethod === 'bank-account') {
+        const accountNumberInput = document.createElement('input');
+        accountNumberInput.type = 'text';
+        accountNumberInput.placeholder = '계좌 번호';
+        accountNumberInput.required = true;
+        paymentInfoDiv.appendChild(accountNumberInput);
+  
+        const bankNameInput = document.createElement('input');
+        bankNameInput.type = 'text';
+        bankNameInput.placeholder = '은행 이름';
+        bankNameInput.required = true;
+        paymentInfoDiv.appendChild(bankNameInput);
+      }
+    }
+  
+    // 입금 방식 선택 이벤트 리스너
+    paymentMethodSelect.addEventListener('change', (event) => {
+      const selectedPaymentMethod = event.target.value;
+      generatePaymentInputs(selectedPaymentMethod);
+    });
+  
+    // 자금 추가 폼 제출 이벤트 리스너
+    const addFundsForm = document.getElementById('add-funds-form');
+    addFundsForm.addEventListener('submit', (event) => {
+      event.preventDefault(); // 기본 폼 제출 동작 방지
+  
+      const amount = document.getElementById('amount').value;
+      const paymentMethod = document.getElementById('payment-method').value;
+  
+      // 입력 값 검증
+      if (!amount || !paymentMethod) {
+        alert('금액과 입금 방식을 선택해주세요.');
+        return;
+      }
+  
+      // 필요한 경우 추가 입력 값 검증 로직 추가
+  
+      // 자금 추가 처리 로직
+      alert(`${amount}원 금액이 ${paymentMethod} 방식으로 추가되었습니다.`);
+  
+      // 성공적으로 자금 추가 후 추가 작업 수행 (예: 지갑 잔고 업데이트, 거래내역 추가 등)
+    });
+  </script>
+</body>
+</html>

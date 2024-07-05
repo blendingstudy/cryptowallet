@@ -1,0 +1,195 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 헤더 스타일 */
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+}
+
+/* 로그아웃 버튼 스타일 */
+#logoutBtn {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  position: absolute;
+  top: 9px;
+  right: 20px;
+}
+
+#logoutBtn:hover {
+  text-decoration: underline;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav li {
+  margin-right: 20px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* 메인 콘텐츠 스타일 */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+section {
+  margin-bottom: 40px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"] {
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+button[type="submit"] {
+  padding: 8px 16px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* 푸터 스타일 */
+footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+}
+
+/* 회원가입 스타일 */
+/* 회원가입 폼 스타일링 */
+#signup-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#signup-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+#signup-form input[type="text"],
+#signup-form input[type="email"],
+#signup-form input[type="password"],
+#signup-form input[type="tel"],
+#signup-form input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+#signup-form input[type="text"]:focus,
+#signup-form input[type="email"]:focus,
+#signup-form input[type="password"]:focus,
+#signup-form input[type="tel"]:focus,
+#signup-form input[type="date"]:focus {
+  outline: none;
+  border-color: #6c63ff;
+}
+
+#signup-form button[type="submit"] {
+  background-color: #6c63ff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#signup-form button[type="submit"]:hover {
+  background-color: #5a50e5;
+}
+
+/* 약관 섹션 스타일링 */
+#terms-container {
+  max-width: 800px;
+  margin: 0 auto 30px;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#terms-container h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+#terms-container ol {
+  padding-left: 20px;
+}
+
+#terms-container li {
+  margin-bottom: 15px;
+}
+
+#terms-container h3 {
+  margin-bottom: 5px;
+  color: #6c63ff;
+}
+
+/* 안내사항 섹션 스타일링 */
+#instructions {
+  max-width: auto;
+  margin: 0 auto 30px;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#instructions h2 {
+  margin-top: 0;
+  color: #333;
+}
